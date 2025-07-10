@@ -308,21 +308,21 @@ The Document Extraction Service can automatically identify and process various d
    - The system automatically identifies the file as a PDF
    - Data is extracted according to your specified schema
    - Example screenshot: `screenshot_identify_file_type(pdf).png`
-   <img src="/screenshot/screenshot_identify_file_type(pdf).png" alt="isolated" width="200"/>
+   <img src="/screenshot/screenshot_identify_file_type(pdf).png" />
 
 2. **Excel Document Processing**
    - Upload Excel spreadsheets (.xlsx, .xls)
    - The system identifies tabular data structure
    - Extracts structured information across multiple sheets
    - Example screenshot: `screenshot_identify_file_type(excel).png`
-   <img src="/screenshot/screenshot_identify_file_type(excel).png" alt="isolated" width="200"/>
+   <img src="/screenshot/screenshot_identify_file_type(excel).png" />
 
 3. **Word Document Processing**
    - Upload Word documents (.docx, .doc)
    - The system processes formatted text and embedded tables
    - Extracts information from both paragraph text and tabular data
    - Example screenshot: `screenshot_identify_file_type(docx).png`
-   <img src="/screenshot/screenshot_identify_file_type(docx).png" alt="isolated" width="200"/>
+   <img src="/screenshot/screenshot_identify_file_type(docx).png" />
 
 ### Use Case 2: Web Interface Testing
 
@@ -331,7 +331,7 @@ The service includes a functional HTML interface for testing extractions:
    - Define extraction schemas through the interface
    - View extracted results in real-time
    - Example screenshot: `functional_test_html.png`
-   <img src="/screenshot/functional_test_html.png" alt="isolated" width="200"/>
+   <img src="/screenshot/functional_test_html.png" />
 
 ### Use Case 3: Results Storage and Management
 
@@ -340,6 +340,6 @@ All extraction results are automatically saved for future reference:
    - Timestamped filenames prevent overwriting previous extractions
    - Easily access historical extraction results
    - Example screenshot: `generated_output_storage.png`
-   <img src="/screenshot/generated_output_storage.png" alt="isolated" width="200"/>
+   <img src="/screenshot/generated_output_storage.png"/>
 
 These use cases demonstrate how the Document Extraction Service can be integrated into various workflows, from financial data processing to legal document analysis and general information extraction tasks.
