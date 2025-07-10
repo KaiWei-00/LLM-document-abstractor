@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Information Extraction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .file-upload-area {
+            border: 3px dashed #cbd5e1;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-upload-area:hover {
+            border-color: #4f46e5;
+            background: #f8fafc;
+        }
+
+        .file-upload-area.dragover {
+            border-color: #4f46e5;
+            background: #ede9fe;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #94a3b8;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-info {
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .schema-section {
+            margin-top: 30px;
+        }
+
+        .schema-input {
+            width: 100%;
+            height: 200px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .schema-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .schema-examples {
+            margin-top: 10px;
+        }
+
+        .example-button {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .example-button:hover {
+            background: #e2e8f0;
+            border-color: #94a3b8;
+        }
+
+        .extract-button {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .extract-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .extract-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #4f46e5;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results h3 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .result-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border-left: 4px solid #4f46e5;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            color: #6b7280;
+            font-family: 'Monaco', 'Menlo', monospace;
+            word-break: break-word;
+        }
+
+        .file-info-display {
+            background: #ede9fe;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .error {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            padding: 15px;
+            color: #dc2626;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .api-url-section {
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .api-url-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📄 Document Information Extraction</h1>
+            <p>Upload documents and extract structured information using AI</p>
+        </div>
+
+        <div class="main-content">
+            <!-- API URL Configuration -->
+            <div class="form-section">
+                <h3>🔧 API Configuration</h3>
+                <div class="api-url-section">
+                    <label for="apiUrl">API Base URL:</label>
+                    <input type="text" id="apiUrl" class="api-url-input" value="http://localhost:8000" placeholder="http://localhost:8000">
+                </div>
+            </div>
+
+            <!-- File Upload Section -->
+            <div class="form-section">
+                <h3>📁 Upload Document</h3>
+                <div class="file-upload-area" id="fileUpload">
+                    <div class="upload-icon">📎</div>
+                    <div class="upload-text">Drag & drop your document here</div>
+                    <div class="upload-subtext">or click to browse (PDF, Excel, Word)</div>
+                    <input type="file" id="fileInput" class="file-input" accept=".pdf,.xlsx,.xls,.docx,.doc">
+                </div>
+                <div class="file-info" id="fileInfo">
+                    <strong>Selected file:</strong> <span id="fileName"></span><br>
+                    <strong>Size:</strong> <span id="fileSize"></span><br>
+                    <strong>Type:</strong> <span id="fileType"></span>
+                </div>
+            </div>
+
+            <!-- Schema Section -->
+            <div class="form-section schema-section">
+                <h3>📋 Extraction Schema</h3>
+                <p style="margin-bottom: 15px; color: #6b7280;">Define the fields you want to extract from the document (JSON format):</p>
+                <textarea id="schemaInput" class="schema-input" placeholder='Enter extraction schema as JSON, e.g.:
+{
+  "company_name": "Name of the company",
+  "revenue": "Total revenue/sales",
+  "year": "Financial year",
+  "ceo_name": "Name of the CEO"
+}'></textarea>
+                <div class="schema-examples">
+                    <p style="margin-bottom: 10px; color: #6b7280; font-size: 0.9rem;">Quick examples:</p>
+                    <button class="example-button" onclick="loadFinancialSchema()">Financial Report</button>
+                    <button class="example-button" onclick="loadInvoiceSchema()">Invoice</button>
+                    <button class="example-button" onclick="loadContractSchema()">Contract</button>
+                    <button class="example-button" onclick="loadResumeSchema()">Resume</button>
+                </div>
+            </div>
+
+            <!-- Extract Button -->
+            <button class="extract-button" id="extractButton" onclick="extractDocument()">
+                🚀 Extract Information
+            </button>
+
+            <!-- Loading Section -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing your document...</p>
+            </div>
+
+            <!-- Error Section -->
+            <div class="error" id="error">
+                <strong>Error:</strong> <span id="errorMessage"></span>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results" id="results">
+                <h3>📊 Extraction Results</h3>
+                <div class="file-info-display" id="fileInfoDisplay"></div>
+                <div id="extractedData"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+
+        // File upload handling
+        const fileUpload = document.getElementById('fileUpload');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+
+        fileUpload.addEventListener('click', () => fileInput.click());
+        fileUpload.addEventListener('dragover', handleDragOver);
+        fileUpload.addEventListener('dragleave', handleDragLeave);
+        fileUpload.addEventListener('drop', handleDrop);
+        fileInput.addEventListener('change', handleFileSelect);
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            fileUpload.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            fileUpload.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            fileUpload.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                selectFile(files[0]);
+            }
+        }
+
+        function handleFileSelect(e) {
+            if (e.target.files.length > 0) {
+                selectFile(e.target.files[0]);
+            }
+        }
+
+        function selectFile(file) {
+            selectedFile = file;
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = formatFileSize(file.size);
+            document.getElementById('fileType').textContent = file.type || 'Unknown';
+            fileInfo.classList.add('show');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Schema examples
+        function loadFinancialSchema() {
+            const schema = {
+                "company_name": "Name of the company",
+                "financial_year": "Financial year of the report",
+                "revenue": "Total revenue/sales",
+                "net_profit": "Net profit/income",
+                "total_assets": "Total assets",
+                "total_liabilities": "Total liabilities",
+                "chairman_name": "Name of the chairman",
+                "ceo_name": "Name of the CEO"
+            };
+            document.getElementById('schemaInput').value = JSON.stringify(schema, null, 2);
+        }
+
+        function loadInvoiceSchema() {
+            const schema = {
+                "invoice_number": "Invoice number",
+                "date": "Invoice date",
+                "vendor_name": "Vendor/supplier name",
+                "customer_name": "Customer name",
+                "total_amount": "Total amount",
+                "tax_amount": "Tax amount",
+                "due_date": "Payment due date"
+            };
+            document.getElementById('schemaInput').value = JSON.stringify(schema, null, 2);
+        }
+
+        function loadContractSchema() {
+            const schema = {
+                "contract_title": "Title of the contract",
+                "party_a": "First party name",
+                "party_b": "Second party name",
+                "contract_date": "Contract date",
+                "contract_value": "Contract value/amount",
+                "duration": "Contract duration",
+                "termination_date": "Termination date"
+            };
+            document.getElementById('schemaInput').value = JSON.stringify(schema, null, 2);
+        }
+
+        function loadResumeSchema() {
+            const schema = {
+                "name": "Full name",
+                "email": "Email address",
+                "phone": "Phone number",
+                "current_position": "Current job title",
+                "years_of_experience": "Years of experience",
+                "education": "Education/degree",
+                "skills": "Key skills"
+            };
+            document.getElementById('schemaInput').value = JSON.stringify(schema, null, 2);
+        }
+
+        // Extract document function
+        async function extractDocument() {
+            // Hide previous results and errors
+            document.getElementById('results').classList.remove('show');
+            document.getElementById('error').classList.remove('show');
+
+            // Validate inputs
+            if (!selectedFile) {
+                showError('Please select a document to upload');
+                return;
+            }
+
+            const schemaText = document.getElementById('schemaInput').value.trim();
+            if (!schemaText) {
+                showError('Please provide an extraction schema');
+                return;
+            }
+
+            let schema;
+            try {
+                schema = JSON.parse(schemaText);
+            } catch (e) {
+                showError('Invalid JSON in schema. Please check the format.');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('extractButton').disabled = true;
+
+            try {
+                // Prepare form data
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+                formData.append('schema', JSON.stringify(schema));
+
+                // Get API URL
+                const apiUrl = document.getElementById('apiUrl').value.trim();
+                
+                // Make API request
+                const response = await fetch(`${apiUrl}/extract`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'API request failed');
+                }
+
+                const result = await response.json();
+                displayResults(result);
+
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                // Hide loading
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('extractButton').disabled = false;
+            }
+        }
+
+        function displayResults(result) {
+            // Display file information
+            const fileInfoDisplay = document.getElementById('fileInfoDisplay');
+            fileInfoDisplay.innerHTML = `
+                <strong>📄 File:</strong> ${result.file_info.filename}<br>
+                <strong>📊 Type:</strong> ${result.file_info.file_type}<br>
+                <strong>📏 Size:</strong> ${formatFileSize(result.file_info.size)}<br>
+                <strong>⏱️ Processing Time:</strong> ${result.processing_time.toFixed(2)} seconds
+            `;
+
+            // Display extracted data
+            const extractedDataDiv = document.getElementById('extractedData');
+            extractedDataDiv.innerHTML = '';
+
+            Object.entries(result.extracted_data).forEach(([key, value]) => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item';
+                resultItem.innerHTML = `
+                    <div class="result-label">${key}</div>
+                    <div class="result-value">${value || '(not found)'}</div>
+                `;
+                extractedDataDiv.appendChild(resultItem);
+            });
+
+            // Show results
+            document.getElementById('results').classList.add('show');
+        }
+
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('error').classList.add('show');
+        }
+
+        // Initialize with financial schema
+        window.onload = () => {
+            loadFinancialSchema();
+        };
+    </script>
+</body>
+</html>
