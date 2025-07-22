@@ -1,0 +1,430 @@
+NAME
+TAX FILE NO.
+BASIS PERIOD
+
+TAX COMPUTATION
+
+BUSINESS INCOME 1
+
+: ABCD SDN BHD
+
+: C 11223356780
+
+: 01-01-2024 - 31-12-2024
+YEAR OF ASSESSMENT :
+
+2024
+
+Net profit as per Audited accounts
+
+Less: Non-business income
+
+Dividend income
+Rental income
+Interest income
+
+Less: Non-taxable gain
+
+Gain on Disposal of Fixed Assets
+BUSINESS INCOME/(LOSS)
+
+Add: Interest restriction under Sec.33(2)
+
+Add: Disallowable expenses under Sec.39(1)
+
+Depr of Building
+
+Depr of Leasehold Land
+
+Depr of Building - House
+
+Depr of Renovation Factory
+
+Depr of Furniture & Fittings
+
+Depr of Office Equipment
+
+Depr of Renovation House
+
+Depr Renovation Office
+
+Depr of Motor Vehicle
+
+Manufacturing Account - Factory Expenses
+Unrealised gain/(loss) on foreign exchange
+Donation & Subscription
+
+Filing and Attestation Fees
+
+Depreciation of Die & Mould
+
+General Expenses
+
+Depreciation of Factory Equipment
+
+Gifts
+
+Depreciation of Plant & Machinery
+
+Insurance
+Legal Fee
+Penalty
+
+Printing and Stationery
+
+Professional Fee
+
+Quit Rent & Assessment
+
+Refreshment
+
+Audit fee
+Registration Fee
+Secretarial Fee
+Staff Welfare
+
+Stamp Duties
+Travelling Expenses
+
+Less: Allowance & deductions
+
+132 deduction of Audit expenses
+
+157 Deduction for expenses in relation to secretarial fee
+
+and tax filing fee
+
+IBIZZTAX Al AGENT
+
+Sch,wks,Notes
+
+A/C
+
+SCH DI
+HK-C16/SCH RI
+HK-C15
+
+Sch INT
+
+P&L
+P&L
+
+P&L
+P&L
+
+P&L
+P&L
+
+NOTE 4
+NOTE 15
+NOTE 20
+NOTE 21
+P&L
+NOTE 22
+P&L
+NOTE 23
+
+NOTE 25
+NOTE 27
+NOTE 32
+NOTE 33
+NOTE 34
+NOTE 35
+NOTE 38
+
+NOTE 39
+NOTE 42
+NOTE 43
+NOTE 44
+NOTE 45
+
+TCOM
+REF NO. :
+CO. NO. : 202407075678
+B/CODE : 10509
+
+Page 1
+
+RM RM
+
+957,886
+
+5,433
+37,939
+20,058
+
+8,150 71,580
+886,306
+
+246,852
+
+3,750
+3,172
+250,111
+28,800
+800
+2,691,792
+
+41,500
+15,000
+
+IBIZZAI
+
+NAME : ABCD SDN BHD
+TAX FILE NO. : C 11223356780
+BASIS PERIOD : 01-01-2024 - 31-12-2024
+
+YEAR OF ASSESSMENT : 2024
+
+TAX COMPUTATION
+
+BUSINESS INCOME 1
+
+ADJUSTED INCOME
+
+IBIZZTAX Al AGENT
+
+Sch,wks,Notes
+
+TCOM
+
+202407075678
+
+: 10509
+
+Page 2
+
+RM
+
+56,500
+3,768,450
+
+IBIZZAI
+
+NAME : ABCD SDN BHD
+
+TAX FILE NO. : C 11223356780
+
+BASIS PERIOD : 01-01-2024 - 31-12-2024
+YEAR OF ASSESSMENT : 2024
+
+TAX COMPUTATION
+
+BUSINESS INCOME 1
+
+ADJUSTED INCOME
+Balancing charge
+
+Less: Capital Allowance
+
+Balance brought forward
+Current year
+
+Amount absorbed this year
+
+Balance carried forward
+
+STATUTORY INCOME
+
+IBIZZTAX Al AGENT
+
+Sch,wks,Notes
+
+REF NO. :
+CO. NO. :
+B/CODE
+
+RM
+
+0
+489,589
+
+489,589
+489,589
+
+0
+
+TCOM
+
+202407075678
+
+: 10509
+
+Page 3
+
+RM
+
+3,768,450
+950
+
+3,769,400
+
+489,589
+
+3,279,811
+
+IBIZZAI
+
+NAME : ABCD SDN BHD
+
+TAX FILE NO. : C 11223356780
+
+BASIS PERIOD : 01-01-2024 - 31-12-2024
+YEAR OF ASSESSMENT : 2024
+
+TAX COMPUTATION
+
+Sch,wks,Notes
+BUSINESS INCOME
+
+Statutory Income 1 (Business code 10509)
+AGGREGATE STATUTORY BUSINESS INCOME
+
+Add: OTHER STATUTORY INCOME
+
+Dividend Income HK-C14/SCH DI
+Less: Direct Expenses Interest allowable HK-C14/SCH DI
+Interest Income HK-C15
+
+Less: Interest allowable related to S33(2) HK-C15/SCH INT
+Deemed Interest Income HK-C15
+
+Less: Interest allowable related to S33(2) HK-C15/SCH INT
+Rental Income HK-C16/SCH RI
+Less: Direct Expenses HK-C16/SCH RI
+
+Less: Rental Income claim IBA
+Unabsorbed CA b/f
+Current year CA
+
+Less: Amount absorbed this year
+Unabsorbed CA b/f
+
+AGGREGATE INCOME
+
+Less: Approved Donations
+TOTAL INCOME
+CHARGEABLE INCOME
+TAX PAYABLE
+Income Tax @ 15% X 150,000
+Income Tax @ 17% X 450,000
+Income Tax @ 24% X 2,713,535
+
+Less: Section 110 set off
+Section 132/133 relief
+
+Less: Actual tax paid via CP204 installment
+Tax over paid and refundable
+
+Estimated/Revised estimated tax via CP204/204A/CP205
+
+IBIZZTAX Al AGENT
+
+REF NO. :
+: 202407075678
+: 10509
+
+CO. NO.
+B/CODE
+
+RM
+
+433
+0
+
+20,058
+(20,058)
+
+222
+(222)
+
+37,939
+(4,398)
+
+ook oton@)
+
+0.00
+0.00
+
+TCOM
+
+Page 4
+
+RM
+
+3,279,811
+3,279,811
+
+433
+
+33,541
+
+3,313,785
+
+250
+3,313,535
+3,313,535
+
+22,500.00
+76,500.00
+
+651,248.40
+
+0.00
+750,248.40
+
+900,000.00
+(149,751.60)
+
+900,000.00
+
+IBIZZAI
+
+NAME
+
+TAX FILE NO.
+BASIS PERIOD
+YEAR OF ASSESSMENT :
+
+TAX COMPUTATION
+
+IBIZZTAX Al AGENT
+
+: ABCD SDN BHD
+: C 11223356780
+: 01-01-2024 - 31-12-2024
+
+2024
+
+TCOM
+REF NO. :
+CO. NO. : 202407075678
+B/CODE : 10509
+
+Page 5
+
+Sch,wks,Notes RM RM
+
+DIRECTOR / PERSON IN CHARGE
+
+IBIZZAI
+
+NAME : ABCD SDN BHD TCOM
+
+TAX FILE NO. : © 11223356780 REF NO. :
+BASIS PERIOD : 01-01-2024 - 31-12-2024 CO. NO. : 202407075678
+YEAR OF ASSESSMENT : 2024 B/CODE : 10509
+TAX COMPUTATION Page 6
+Sch,wks,Notes RM RM
+Exempt Account
+Exempt credit balance b/f 0
+Add:
+Incentive claim 0
+Exempt income 0
+0
+Less:
+Current year non pioneer loss 0
+Exempt dividend paid / credited / distributed 0
+Exempt credit balance c/f 0
+
+IBIZZTAX Al AGENT IBIZZAI

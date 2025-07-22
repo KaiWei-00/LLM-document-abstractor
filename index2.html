@@ -334,26 +334,21 @@
                     <strong>Size:</strong> <span id="fileSize"></span><br>
                     <strong>Type:</strong> <span id="fileType"></span>
                 </div>
-            </div>
+        </style>
+    </head>
+    <body>
+        <div class="container">
+           
 
-            <!-- Schema Section -->
-            <div class="form-section schema-section">
-                <h3>📋 Extraction Schema</h3>
-                <p style="margin-bottom: 15px; color: #6b7280;">Define the fields you want to extract from the document (JSON format):</p>
-                <textarea id="schemaInput" class="schema-input" placeholder='Enter extraction schema as JSON, e.g.:
-{
-  "company_name": "Name of the company",
-  "revenue": "Total revenue/sales",
-  "year": "Financial year",
-  "ceo_name": "Name of the CEO"
-}'></textarea>
-                <div class="schema-examples">
-                    <p style="margin-bottom: 10px; color: #6b7280; font-size: 0.9rem;">Quick examples:</p>
-                    <button class="example-button" onclick="loadFinancialSchema()">Financial Report</button>
-                    <button class="example-button" onclick="loadInvoiceSchema()">Invoice</button>
-                    <button class="example-button" onclick="loadContractSchema()">Contract</button>
-                    <button class="example-button" onclick="loadResumeSchema()">Resume</button>
-                </div>
+                <!-- Schema Section -->
+                <div class="form-section schema-section">
+                    <div style="margin-bottom: 10px;">
+  <span style="font-size: 1rem; font-weight: 600; color: #4f46e5;">Schema will be auto-detected for every document.</span>
+</div>
+                    <h3>📋 Extraction Schema</h3>
+                    <p style="margin-bottom: 15px; color: #6b7280;">Define the fields you want to extract from the document (JSON format):</p>
+                    <textarea id="schemaInput" class="schema-input" placeholder="Schema will be auto-detected and shown here." disabled></textarea>
+
             </div>
 
             <!-- Extract Button -->
@@ -436,60 +431,6 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        // Schema examples
-        function loadFinancialSchema() {
-            const schema = {
-                "company_name": "Name of the company",
-                "financial_year": "Financial year of the report",
-                "revenue": "Total revenue/sales",
-                "net_profit": "Net profit/income",
-                "total_assets": "Total assets",
-                "total_liabilities": "Total liabilities",
-                "chairman_name": "Name of the chairman",
-                "ceo_name": "Name of the CEO"
-            };
-            document.getElementById('schemaInput').value = JSON.stringify(schema, null, 2);
-        }
-
-        function loadInvoiceSchema() {
-            const schema = {
-                "invoice_number": "Invoice number",
-                "date": "Invoice date",
-                "vendor_name": "Vendor/supplier name",
-                "customer_name": "Customer name",
-                "total_amount": "Total amount",
-                "tax_amount": "Tax amount",
-                "due_date": "Payment due date"
-            };
-            document.getElementById('schemaInput').value = JSON.stringify(schema, null, 2);
-        }
-
-        function loadContractSchema() {
-            const schema = {
-                "contract_title": "Title of the contract",
-                "party_a": "First party name",
-                "party_b": "Second party name",
-                "contract_date": "Contract date",
-                "contract_value": "Contract value/amount",
-                "duration": "Contract duration",
-                "termination_date": "Termination date"
-            };
-            document.getElementById('schemaInput').value = JSON.stringify(schema, null, 2);
-        }
-
-        function loadResumeSchema() {
-            const schema = {
-                "name": "Full name",
-                "email": "Email address",
-                "phone": "Phone number",
-                "current_position": "Current job title",
-                "years_of_experience": "Years of experience",
-                "education": "Education/degree",
-                "skills": "Key skills"
-            };
-            document.getElementById('schemaInput').value = JSON.stringify(schema, null, 2);
-        }
-
         // Extract document function
         async function extractDocument() {
             // Hide previous results and errors
@@ -502,34 +443,14 @@
                 return;
             }
 
-            const schemaText = document.getElementById('schemaInput').value.trim();
-            if (!schemaText) {
-                showError('Please provide an extraction schema');
-                return;
-            }
-
-            let schema;
-            try {
-                schema = JSON.parse(schemaText);
-            } catch (e) {
-                showError('Invalid JSON in schema. Please check the format.');
-                return;
-            }
-
-            // Show loading
             document.getElementById('loading').classList.add('show');
             document.getElementById('extractButton').disabled = true;
 
             try {
-                // Prepare form data
                 const formData = new FormData();
                 formData.append('file', selectedFile);
-                formData.append('schema', JSON.stringify(schema));
-
-                // Get API URL
+                formData.append('auto_detect_schema', true); // always auto-detect
                 const apiUrl = document.getElementById('apiUrl').value.trim();
-                
-                // Make API request
                 const response = await fetch(`${apiUrl}/extract`, {
                     method: 'POST',
                     body: formData
@@ -552,33 +473,157 @@
             }
         }
 
+        // --- Enhanced Results Display ---
         function displayResults(result) {
             // Display file information
             const fileInfoDisplay = document.getElementById('fileInfoDisplay');
             fileInfoDisplay.innerHTML = `
-                <strong>📄 File:</strong> ${result.file_info.filename}<br>
-                <strong>📊 Type:</strong> ${result.file_info.file_type}<br>
-                <strong>📏 Size:</strong> ${formatFileSize(result.file_info.size)}<br>
-                <strong>⏱️ Processing Time:</strong> ${result.processing_time.toFixed(2)} seconds
+                <strong> File:</strong> ${result.file_info.filename}<br>
+                <strong> Type:</strong> ${result.file_info.file_type}<br>
+                <strong> Size:</strong> ${formatFileSize(result.file_info.size)}<br>
+                <strong> Processing Time:</strong> ${result.processing_time.toFixed(2)} seconds
             `;
 
-            // Display extracted data
+            // Toggle for Raw/Final view
             const extractedDataDiv = document.getElementById('extractedData');
             extractedDataDiv.innerHTML = '';
 
-            Object.entries(result.extracted_data).forEach(([key, value]) => {
-                const resultItem = document.createElement('div');
-                resultItem.className = 'result-item';
-                resultItem.innerHTML = `
-                    <div class="result-label">${key}</div>
-                    <div class="result-value">${value || '(not found)'}</div>
-                `;
-                extractedDataDiv.appendChild(resultItem);
-            });
+            // For Excel files, the data is structured differently
+            let rawData, finalData;
+            if (result.file_info && result.file_info.file_type === 'excel') {
+                // Excel data structure: result.extracted_data contains the sheet data directly
+                rawData = result.raw_extracted_data || result.extracted_data;
+                finalData = result.extracted_data;
+            } else {
+                // PDF and other files
+                rawData = result.raw_extracted_data || result.extracted_data;
+                finalData = result.extracted_data;
+            }
+            let viewMode = 'final';
+            
+            console.log('File type:', result.file_info?.file_type);
+            console.log('Final data keys:', Object.keys(finalData || {}));
+            console.log('Raw data keys:', Object.keys(rawData || {}));
+
+            // Toggle UI
+            const toggleDiv = document.createElement('div');
+            toggleDiv.style.marginBottom = '20px';
+            toggleDiv.innerHTML = `
+                <button id="toggleViewBtn" style="padding:7px 18px;border-radius:8px;border:1px solid #cbd5e1;background:#ede9fe;color:#4f46e5;font-weight:600;cursor:pointer;">Show Raw Extraction</button>
+            `;
+            extractedDataDiv.appendChild(toggleDiv);
+
+            function renderData(data, mode) {
+                console.log('renderData called with mode:', mode);
+                console.log('renderData received data:', data);
+                console.log('Data keys:', Object.keys(data || {}));
+                
+                extractedDataDiv.querySelectorAll('.sheet-section').forEach(e => e.remove());
+                
+                // Helper: formula badge
+                const badge = (txt) => `<span style="background:#dbeafe;color:#1e40af;font-size:0.85em;padding:2px 8px;border-radius:7px;margin-left:7px;">${txt}</span>`;
+                // Helper: formula explanation
+                const formula = (txt) => `<div style='color:#64748b;font-size:0.9em;margin-top:2px;margin-bottom:7px;'><b>Formula:</b> ${txt}</div>`;
+                
+                // Manufacturing Account
+                console.log('Checking for Manufacturing Account:', !!data['Manufacturing Account']);
+                if (data['Manufacturing Account']) {
+                    const mfg = data['Manufacturing Account'];
+                    let html = `<div class="sheet-section"><h3>🏭 Manufacturing Account</h3><table style='width:100%;margin-bottom:15px;'>`;
+                    if (mfg.raw_material) {
+                        html += `<tr><td><b>Cost of Raw Material Consumed</b>${badge('calculated')}</td><td>${mfg.raw_material.cost_of_raw_material_consumed || ''}</td></tr>`;
+                        if (mode==='final') html += `<tr><td colspan=2>${formula('Opening Stock + Purchases - Returns Outwards - Closing Stock')}</td></tr>`;
+                    }
+                    if (mfg.direct_labour) {
+                        html += `<tr><td><b>Direct Labour Total</b>${badge('calculated')}</td><td>${mfg.direct_labour.total || ''}</td></tr>`;
+                        if (mode==='final') html += `<tr><td colspan=2>${formula('Sum of bonus, casual_wages, epf, socso, eis, sub_contract_wages, wages_salaries')}</td></tr>`;
+                    }
+                    if (mfg.factory_overheads) {
+                        html += `<tr><td><b>Factory Overheads Total</b>${badge('calculated')}</td><td>${mfg.factory_overheads.total_overheads || mfg.factory_overheads.total || ''}</td></tr>`;
+                        if (mode==='final') html += `<tr><td colspan=2>${formula('Depreciation + Factory Expenses')}</td></tr>`;
+                    }
+                    html += `<tr><td><b>Total Cost</b>${badge('calculated')}</td><td>${mfg.total_cost || ''}</td></tr>`;
+                    if (mode==='final') html += `<tr><td colspan=2>${formula('Cost of Raw Material Consumed + Direct Labour Total + Factory Overheads Total')}</td></tr>`;
+                    html += `<tr><td><b>Production Cost</b>${badge('calculated')}</td><td>${mfg.production_cost || ''}</td></tr>`;
+                    if (mode==='final') html += `<tr><td colspan=2>${formula('Total Cost + Opening WIP - Closing WIP')}</td></tr>`;
+                    html += `</table></div>`;
+                    extractedDataDiv.insertAdjacentHTML('beforeend', html);
+                }
+                // Trading P&L
+                if (data['Trading P&L']) {
+                    const tpl = data['Trading P&L'];
+                    let html = `<div class="sheet-section"><h3>💹 Trading P&L</h3><table style='width:100%;margin-bottom:15px;'>`;
+                    html += `<tr><td><b>Revenue</b>${badge('calculated')}</td><td>${tpl.revenue || ''}</td></tr>`;
+                    if (mode==='final') html += `<tr><td colspan=2>${formula('Sales - Returns Inwards')}</td></tr>`;
+                    html += `<tr><td><b>Gross Profit</b>${badge('calculated')}</td><td>${tpl.gross_profit || ''}</td></tr>`;
+                    if (mode==='final') html += `<tr><td colspan=2>${formula('Revenue - Total Cost of Sales')}</td></tr>`;
+                    if (tpl.other_income) {
+                        html += `<tr><td><b>Other Income Total</b>${badge('calculated')}</td><td>${tpl.other_income.total || ''}</td></tr>`;
+                        if (mode==='final') html += `<tr><td colspan=2>${formula('Sum of all other income items')}</td></tr>`;
+                    }
+                    if (tpl.expenses) {
+                        html += `<tr><td><b>Expenses Total</b>${badge('calculated')}</td><td>${tpl.expenses.total || ''}</td></tr>`;
+                        if (mode==='final') html += `<tr><td colspan=2>${formula('Gross Profit + Other Income - Net Profit')}</td></tr>`;
+                    }
+                    html += `<tr><td><b>Net Profit</b>${badge('calculated')}</td><td>${tpl.net_profit || ''}</td></tr>`;
+                    if (mode==='final') html += `<tr><td colspan=2>${formula('Gross Profit + Other Income - Expenses')}</td></tr>`;
+                    html += `</table></div>`;
+                    extractedDataDiv.insertAdjacentHTML('beforeend', html);
+                }
+                // Balance Sheet
+                if (data['Balance Sheet']) {
+                    const bs = data['Balance Sheet'];
+                    let html = `<div class="sheet-section"><h3>📑 Balance Sheet</h3><table style='width:100%;margin-bottom:15px;'>`;
+                    if (bs.non_current_assets) {
+                        html += `<tr><td><b>Non-Current Assets Total</b>${badge('calculated')}</td><td>${bs.non_current_assets.total || ''}</td></tr>`;
+                        if (mode==='final') html += `<tr><td colspan=2>${formula('Property, Plant & Equipment + Investments')}</td></tr>`;
+                    }
+                    if (bs.current_assets) {
+                        html += `<tr><td><b>Current Assets Total</b>${badge('calculated')}</td><td>${bs.current_assets.total || ''}</td></tr>`;
+                        if (mode==='final') html += `<tr><td colspan=2>${formula('Sum of all current asset items')}</td></tr>`;
+                    }
+                    if (bs.current_liabilities) {
+                        html += `<tr><td><b>Current Liabilities Total</b>${badge('calculated')}</td><td>${bs.current_liabilities.total || ''}</td></tr>`;
+                        if (mode==='final') html += `<tr><td colspan=2>${formula('Sum of all current liability items')}</td></tr>`;
+                    }
+                    if (bs.non_current_liabilities) {
+                        html += `<tr><td><b>Non-Current Liabilities Total</b>${badge('calculated')}</td><td>${bs.non_current_liabilities.total || ''}</td></tr>`;
+                        if (mode==='final') html += `<tr><td colspan=2>${formula('Sum of all non-current liability items')}</td></tr>`;
+                    }
+                    if (bs.equity) {
+                        html += `<tr><td><b>Equity Total</b>${badge('calculated')}</td><td>${bs.equity.total || ''}</td></tr>`;
+                        if (mode==='final') html += `<tr><td colspan=2>${formula('Share Capital + Retained Earnings')}</td></tr>`;
+                    }
+                    html += `<tr><td><b>Total Assets</b></td><td>${bs.total_assets || ''}</td></tr>`;
+                    html += `<tr><td><b>Total Liabilities & Equity</b></td><td>${bs.total_liabilities_equity || ''}</td></tr>`;
+                    html += `</table></div>`;
+                    extractedDataDiv.insertAdjacentHTML('beforeend', html);
+                }
+            }
+
+            // Initial render (final/calculated)
+            console.log('Calling renderData with finalData:', finalData);
+            renderData(finalData, 'final');
+            
+            // Toggle button logic
+            document.getElementById('toggleViewBtn').onclick = function() {
+                if (viewMode === 'final') {
+                    console.log('Switching to raw data:', rawData);
+                    renderData(rawData, 'raw');
+                    this.textContent = 'Show Final (Calculated)';
+                    viewMode = 'raw';
+                } else {
+                    console.log('Switching to final data:', finalData);
+                    renderData(finalData, 'final');
+                    this.textContent = 'Show Raw Extraction';
+                    viewMode = 'final';
+                }
+            };
 
             // Show results
             document.getElementById('results').classList.add('show');
         }
+
 
         function showError(message) {
             document.getElementById('errorMessage').textContent = message;
@@ -587,7 +632,7 @@
 
         // Initialize with financial schema
         window.onload = () => {
-            loadFinancialSchema();
+            // loadFinancialSchema() call removed to prevent ReferenceError.
         };
     </script>
 </body>

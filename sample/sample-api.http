@@ -1,0 +1,55 @@
+### Document Processing API Test File
+### Based on delivery-order-process-api.yaml specification
+
+### Variables
+@baseUrl = http://tn-service.gentech-ai-site.com/api/v1
+@clientId = tiongnam
+@secretHash = tiongnam:771481262ef070d50467d59eed77438a8868c4e2c62628c075956d61132fe58c
+@sampleFile = C:/Users/jiale/OneDrive/Desktop/sample/sample/41_TEA_PENANG (127.100.0.4)_ScanToFile_04-17-2025_11-55-02_1.pdf_Document-10384974.pdf
+
+### 1. Process Delivery Order Document
+### POST /process-do
+POST {{baseUrl}}/process-do
+x-secret-hash: {{secretHash}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="sample-document.pdf"
+Content-Type: application/pdf
+
+< {{sampleFile}}
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+### 2. Update Secret Key
+### POST /auth/update-secret
+POST {{baseUrl}}/auth/update-secret
+Content-Type: application/json
+x-secret-hash: {{secretHash}}
+
+{
+  "clientId": "{{clientId}}"
+}
+
+###
+
+### 3. Register Webhook Callback URL
+### PUT /webhook/register
+PUT {{baseUrl}}/webhook/register
+Content-Type: application/json
+x-secret-hash: {{secretHash}}
+
+{
+  "callbackUrl": "http://localhost:3030/webhook"
+}
+
+###
+
+### 4. Test Webhook Delivery
+### POST /webhook/test
+POST {{baseUrl}}/webhook/test
+Content-Type: application/json
+x-secret-hash: {{secretHash}}
+
+###

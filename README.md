@@ -159,6 +159,78 @@ Validates an extraction schema.
 
 ## Usage Examples
 
+### Integrating with Other Applications
+
+You can call this microservice from any backend or frontend application that can make HTTP requests. The most common integration pattern is to use the `/extract` endpoint to upload documents and receive structured extraction results.
+
+#### Example: Calling from Python
+```python
+import requests
+
+url = "http://localhost:8000/extract"
+files = {'file': open('Management Accounts.xlsx', 'rb')}
+schema = {
+    "company_name": "Name of the company",
+    "report_period": "Reporting period",
+    "revenue": "Total revenue",
+    "net_profit": "Net profit"
+}
+data = {'schema': json.dumps(schema)}
+
+response = requests.post(url, files=files, data=data)
+print(response.json())
+```
+
+#### Example: Calling from Node.js
+```js
+const axios = require('axios');
+const FormData = require('form-data');
+const fs = require('fs');
+
+const form = new FormData();
+form.append('file', fs.createReadStream('Management Accounts.xlsx'));
+form.append('schema', JSON.stringify({
+  company_name: 'Name of the company',
+  report_period: 'Reporting period',
+  revenue: 'Total revenue',
+  net_profit: 'Net profit'
+}));
+
+axios.post('http://localhost:8000/extract', form, {
+  headers: form.getHeaders()
+}).then(res => {
+  console.log(res.data);
+});
+```
+
+#### Example: Calling from Frontend (JavaScript)
+```js
+const formData = new FormData();
+formData.append('file', fileInput.files[0]);
+formData.append('schema', JSON.stringify({
+  company_name: 'Name of the company',
+  report_period: 'Reporting period',
+  revenue: 'Total revenue',
+  net_profit: 'Net profit'
+}));
+fetch('http://localhost:8000/extract', {
+  method: 'POST',
+  body: formData
+})
+  .then(res => res.json())
+  .then(data => console.log(data));
+```
+
+#### Response Structure
+The response will be a JSON object containing the extracted data, file info, processing time, and status. For Excel files with multiple sheets, the output will include structured data for each detected sheet type.
+
+#### Integration Notes
+- The microservice is stateless and can be run behind a reverse proxy or as a Docker container.
+- You can deploy it to cloud platforms (AWS/GCP/Azure) and call it via its public endpoint.
+- For production, secure the API with authentication and HTTPS.
+- For large files or batch processing, consider asynchronous invocation and polling for results.
+- The extraction logic is robust and will attempt fallback extraction for problematic files.
+
 ### Example 1: Extract information from a PDF document
 
 **Python:**

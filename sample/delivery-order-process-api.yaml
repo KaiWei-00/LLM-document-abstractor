@@ -1,0 +1,478 @@
+openapi: 3.0.0
+info:
+  title: Document Processing API
+  description: API for processing delivery order documents with OCR and DeepSeek
+  version: 1.0.0
+  contact:
+    name: GenTech AI
+servers:
+  - url: /api/v1
+    description: Base API path for document processing operations
+
+# Global security requirement - applies to all operations unless overridden
+security:
+  - secretHashAuth: []
+paths:
+  /auth/update-secret:
+    post:
+      summary: Update client secret key
+      description: |
+        Allows clients to rotate their secret key for enhanced security.
+        This endpoint should be called periodically (recommended every 3 months).
+      operationId: updateSecretKey
+      security:
+        - secretHashAuth: []
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - clientId
+              properties:
+                clientId:
+                  type: string
+                  description: Client identifier
+                  example: tiongnam-dev
+      responses:
+        '200':
+          description: Secret key updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Secret key updated successfully
+                  clientId:
+                    type: string
+                    example: tiongnam-dev
+                  clientSecret:
+                    type: string
+                    example: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+                  apiKey:
+                    type: string
+                    description: The new API key hash
+                    example: tiongnam-dev:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Authentication required
+        '404':
+          description: Client not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: API client not found
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Error updating secret key
+  
+  /process-do:
+    post:
+      summary: Process delivery order document
+      description: |
+        Upload and process a delivery order document (PDF or image) using OCR.
+        The document will be analyzed to extract delivery order information via DeepSeek.
+      operationId: processDeliveryOrderDocument
+      security:
+        - secretHashAuth: []
+      tags:
+        - Documents
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: PDF or image file containing delivery order document to process (raw document)
+      responses:
+        '201':
+          description: Document uploaded successfully and queued for processing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Document uploaded successfully and queued for processing
+                  document:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        example: 60d21b4667d0d8992e610c85
+                      fileName:
+                        type: string
+                        example: delivery-order-123.pdf
+                      status:
+                        type: string
+                        enum: [uploaded, processing, completed, failed]
+                        example: uploaded
+                      createdAt:
+                        type: string
+                        format: date-time
+                        example: '2025-06-30T08:01:28Z'
+
+        '400':
+          description: Bad request - missing file or unsupported file type
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: No file uploaded
+                  validationResult:
+                    type: object
+                    properties:
+                      isValid:
+                        type: boolean
+                        example: false
+                      completeness:
+                        type: number
+                        example: 0
+                      message:
+                        type: string
+                        example: ⚠️ Invalid file format. Only PDF and image files (JPG, PNG, etc.) are supported.
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Authentication required
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Failed to process document
+                  details:
+                    type: string
+                    example: Internal server error message
+
+
+components:
+  securitySchemes:
+    secretHashAuth:
+      type: apiKey
+      in: header
+      name: x-secret-hash
+      description: |
+        Secure hash-based authentication using client credentials.
+        
+        **Authentication Flow:**
+        1. Generate an API key hash using HMAC-SHA256 with clientSecret as the key and clientId as the message
+        2. Set the x-secret-hash header with value in format: `clientId:apiKeyHash`
+        
+        **Implementation Details:**
+        - Authentication is handled by the auth.middleware.js module
+        - No token expiration - authentication is validated on each request
+        - Uses HMAC-SHA256 for secure hashing
+        - Implements timing-safe comparison to prevent timing attacks
+        - Client secrets are never transmitted over the network
+        
+        **Error Responses:**
+        - 401 Unauthorized: Missing or invalid authentication credentials
+        - 403 Forbidden: Valid credentials but insufficient permissions
+
+  schemas:
+    ApiKey:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The API key value
+          example: 'sk_api_key_789012345678901234567890'
+        clientId:
+          type: string
+          description: Client identifier associated with this API key
+          example: 'client_123456'
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        fileName:
+          type: string
+        fileType:
+          type: string
+        status:
+          type: string
+          enum: [uploaded, processing, completed, failed]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    DeliveryOrder:
+      type: object
+      description: Standardized delivery order data structure based on OCR payload
+      required:
+        - documentId
+        - jobId
+        - clientId
+      properties:
+        id:
+          type: string
+          format: uuid
+        documentId:
+          type: string
+          description: Reference to the original document
+        jobId:
+          type: string
+          description: Reference to the processing job
+        clientId:
+          type: string
+          description: Client identifier
+        documentInfo:
+          type: object
+          properties:
+            documentType:
+              type: string
+              default: 'DELIVERY_ORDER'
+              description: Type of document being processed
+            scanDate:
+              type: string
+              description: Date and time when document was scanned
+              pattern: '^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2})?'
+            confidence:
+              type: number
+              format: float
+              minimum: 0
+              maximum: 1
+              default: 0.8
+        orderIdentifiers:
+          type: object
+          properties:
+            referenceNumbers:
+              type: array
+              items:
+                type: object
+                properties:
+                  referenceNo:
+                    type: string
+                  referenceType:
+                    type: string
+                    description: Type of reference number (e.g., Delivery Order, Purchase Order, etc.)
+        dates:
+          type: object
+          properties:
+            loadingDate:
+              type: string
+              pattern: '^\d{4}-\d{2}-\d{2}$'
+              description: Date when goods were loaded
+            eddDate:
+              type: string
+              pattern: '^\d{4}-\d{2}-\d{2}$'
+              description: Estimated delivery date
+            poDate:
+              type: string
+              pattern: '^\d{4}-\d{2}-\d{2}$'
+              description: Purchase order date
+        parties:
+          type: object
+          properties:
+            consignee:
+              $ref: '#/components/schemas/Party'
+            consignor:
+              $ref: '#/components/schemas/Party'
+        shipmentDetails:
+          type: object
+          properties:
+            weightKg:
+              type: string
+              description: Weight in kilograms
+            volumeL:
+              type: string
+              description: Volume in liters
+            cubicMeter:
+              type: string
+              description: Volume in cubic meters
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeliveryOrderItem'
+        instructions:
+          type: object
+          properties:
+            deliveryInstruction:
+              type: string
+            pickupInstruction:
+              type: string
+            remarks:
+              type: string
+        processing_info:
+          type: object
+          properties:
+            date_conversions:
+              type: array
+              items:
+                type: object
+                properties:
+                  original:
+                    type: string
+                  converted:
+                    type: string
+                  field:
+                    type: string
+            validation_warnings:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    description: Field that has the warning
+                  message:
+                    type: string
+                    description: Warning message
+                  severity:
+                    type: string
+                    description: Warning severity level
+                    default: 'warning'
+                  timestamp:
+                    type: string
+                    description: Time when the warning was generated
+            completeness_score:
+              type: number
+              minimum: 0
+              maximum: 100
+              default: 0
+            processing_status:
+              type: string
+              default: PENDING
+              description: Status of the processing (e.g., COMPLETE, PARTIAL, INVALID, PENDING)
+            ai_provider:
+              type: string
+              default: deepseek
+              description: AI provider used for processing
+            last_updated:
+              type: string
+              format: date-time
+        pageResults:
+          type: array
+          items:
+            type: object
+            properties:
+              pageId:
+                type: string
+              pageNumber:
+                type: number
+                minimum: 1
+              confidence:
+                type: number
+                minimum: 0
+                maximum: 1
+              ai_provider:
+                type: string
+                description: AI provider used for processing
+              processing_duration_ms:
+                type: number
+                minimum: 0
+                description: Total processing time in milliseconds
+              ocr_processing_time_ms:
+                type: number
+                minimum: 0
+                description: OCR API processing time in milliseconds
+        extractedAt:
+          type: string
+          format: date-time
+        doNumber:
+          type: string
+          description: Primary delivery order number (legacy field)
+        deliveryDate:
+          type: string
+          format: date-time
+          description: Primary delivery date (legacy field)
+        customer:
+          type: object
+          properties:
+            name:
+              type: string
+            address:
+              type: string
+            phone:
+              type: string
+
+    DeliveryOrderItem:
+      type: object
+      properties:
+        itemCode:
+          type: string
+          description: Product or item code
+        itemDesc:
+          type: string
+          description: Product description
+        quantity:
+          type: number
+          minimum: 0
+          description: Quantity of items
+        uom:
+          type: string
+          description: Unit of measure (e.g., PCS, KG, CARTONS, etc.)
+
+    Party:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Company or individual name
+        address:
+          type: object
+          properties:
+            addressText:
+              type: string
+              description: Complete address as text
+            city:
+              type: string
+            state:
+              type: string
+            country:
+              type: string
+              default: 'Malaysia'
+            postalCode:
+              type: string
+              pattern: '^\d{5}$'
+              description: 5-digit postal code for Malaysia

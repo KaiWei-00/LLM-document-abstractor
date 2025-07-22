@@ -1,0 +1,389 @@
+PDF Raw Text Extraction - ABCD Tax Comp.pdf
+Timestamp: 2025-07-22T12:13:06.775712
+Total Pages: 6
+================================================================================
+
+PAGE 1
+----------------------------------------
+NAME
+: ABCD SDN BHD
+TCOM
+TAX FILE NO.
+: C 11223356780 
+REF NO. :
+BASIS PERIOD
+: 01-01-2024 - 31-12-2024 
+CO. NO. : 202407075678
+YEAR OF ASSESSMENT : 2024
+B/CODE : 10509 
+TAX COMPUTATION
+Page 1
+Sch,wks,Notes
+RM
+RM
+BUSINESS INCOME 1
+Net profit as per Audited accounts
+A/C
+957,886
+Less: Non-business income
+Dividend income
+SCH DI
+5,433
+Rental income
+HK-C16/SCH RI
+37,939
+Interest income
+HK-C15
+20,058
+Less: Non-taxable gain
+Gain on Disposal of Fixed Assets                            
+8,150
+71,580
+BUSINESS INCOME/(LOSS)
+886,306
+Add:
+Interest restriction under Sec.33(2)
+Sch INT
+246,852
+Add:
+Disallowable expenses under Sec.39(1)
+Depr of Building
+P & L
+299,233
+Depr of Leasehold Land
+P & L
+20,968
+Depr of Building - House
+P & L
+29,707
+Depr of Renovation Factory
+P & L
+218,505
+Depr of Furniture & Fittings
+P & L
+7,220
+Depr of Office Equipment
+P & L
+54,367
+Depr of Renovation House
+P & L
+1,990
+Depr Renovation Office
+P & L
+5,668
+Depr of Motor Vehicle
+P & L
+197,224
+Manufacturing Account - Factory Expenses
+NOTE 4
+10,000
+Unrealised gain/(loss) on foreign exchange
+NOTE 15
+31,246
+Donation & Subscription
+NOTE 20
+450
+Filing and Attestation Fees
+NOTE 21
+38
+Depreciation of Die & Mould
+P & L
+249,513
+General Expenses
+NOTE 22
+45,443
+Depreciation of Factory Equipment
+P & L
+14,298
+Gifts
+NOTE 23
+7,612
+Depreciation of Plant & Machinery
+P & L
+1,123,638
+Insurance
+NOTE 25
+1,288
+Legal Fee
+NOTE 27
+18,207
+Penalty
+NOTE 32
+231
+Printing and Stationery
+NOTE 33
+1,639
+Professional Fee
+NOTE 34
+20,000
+Quit Rent & Assessment
+NOTE 35
+3,210
+Refreshment
+NOTE 38
+1,964
+Audit fee
+P & L
+41,500
+Registration Fee
+NOTE 39
+3,750
+Secretarial Fee
+NOTE 42
+3,172
+Staff Welfare
+NOTE 43
+250,111
+Stamp Duties
+NOTE 44
+28,800
+Travelling Expenses
+NOTE 45
+800
+2,691,792
+Less: Allowance & deductions
+132 deduction of Audit expenses
+41,500
+157 Deduction for expenses in relation to secretarial fee
+and tax filing fee
+15,000
+IBIZZTAX AI AGENT
+IBIZZAI
+
+
+================================================================================
+
+PAGE 2
+----------------------------------------
+NAME
+: ABCD SDN BHD
+TCOM
+TAX FILE NO.
+: C 11223356780 
+REF NO. :
+BASIS PERIOD
+: 01-01-2024 - 31-12-2024 
+CO. NO. : 202407075678
+YEAR OF ASSESSMENT : 2024
+B/CODE : 10509 
+TAX COMPUTATION
+Page 2
+Sch,wks,Notes
+RM
+RM
+BUSINESS INCOME 1
+56,500
+ADJUSTED INCOME
+3,768,450
+IBIZZTAX AI AGENT
+IBIZZAI
+
+
+================================================================================
+
+PAGE 3
+----------------------------------------
+NAME
+: ABCD SDN BHD
+TCOM
+TAX FILE NO.
+: C 11223356780 
+REF NO. :
+BASIS PERIOD
+: 01-01-2024 - 31-12-2024 
+CO. NO. : 202407075678
+YEAR OF ASSESSMENT : 2024
+B/CODE : 10509 
+TAX COMPUTATION
+Page 3
+Sch,wks,Notes
+RM
+RM
+BUSINESS INCOME 1
+ADJUSTED INCOME
+3,768,450
+Balancing charge
+950
+3,769,400
+Less: Capital Allowance
+Balance brought forward
+0
+Current year
+489,589
+489,589
+Amount absorbed this year
+489,589
+489,589
+Balance carried forward
+0
+STATUTORY INCOME
+3,279,811
+IBIZZTAX AI AGENT
+IBIZZAI
+
+
+================================================================================
+
+PAGE 4
+----------------------------------------
+NAME
+: ABCD SDN BHD
+TCOM
+TAX FILE NO.
+: C 11223356780 
+REF NO. :
+BASIS PERIOD
+: 01-01-2024 - 31-12-2024 
+CO. NO. : 202407075678
+YEAR OF ASSESSMENT : 2024
+B/CODE : 10509 
+TAX COMPUTATION
+Page 4
+Sch,wks,Notes
+RM
+RM
+BUSINESS INCOME
+Statutory Income 1 (Business code 10509)
+3,279,811
+AGGREGATE STATUTORY BUSINESS INCOME
+3,279,811
+Add:
+OTHER STATUTORY INCOME
+Dividend Income
+HK-C14/SCH DI
+433
+Less: Direct Expenses Interest allowable
+HK-C14/SCH DI
+0
+433
+Interest Income
+HK-C15
+20,058
+Less: Interest allowable related to S33(2)
+HK-C15/SCH INT
+(20,058)
+0
+Deemed Interest Income
+HK-C15
+222
+Less: Interest allowable related to S33(2)
+HK-C15/SCH INT
+(222)
+0
+Rental Income
+HK-C16/SCH RI
+37,939
+Less: Direct Expenses
+HK-C16/SCH RI
+(4,398)
+33,541
+Less: Rental Income claim IBA
+Unabsorbed CA b/f
+0
+Current year CA
+0
+0
+Less: Amount absorbed this year
+0
+0
+Unabsorbed CA b/f
+0
+AGGREGATE INCOME
+3,313,785
+Less: Approved Donations
+250
+TOTAL INCOME
+3,313,535
+CHARGEABLE INCOME
+3,313,535
+TAX PAYABLE
+Income Tax @ 15% X 150,000
+22,500.00
+Income Tax @ 17% X 450,000
+76,500.00
+Income Tax @ 24% X 2,713,535
+651,248.40
+Less: Section 110 set off
+0.00
+Section 132/133 relief
+0.00
+0.00
+750,248.40
+Less: Actual tax paid via CP204 installment
+900,000.00
+Tax over paid and refundable
+(149,751.60)
+Estimated/Revised estimated tax via CP204/204A/CP205
+900,000.00
+IBIZZTAX AI AGENT
+IBIZZAI
+
+
+================================================================================
+
+PAGE 5
+----------------------------------------
+NAME
+: ABCD SDN BHD
+TCOM
+TAX FILE NO.
+: C 11223356780 
+REF NO. :
+BASIS PERIOD
+: 01-01-2024 - 31-12-2024 
+CO. NO. : 202407075678
+YEAR OF ASSESSMENT : 2024
+B/CODE : 10509 
+TAX COMPUTATION
+Page 5
+Sch,wks,Notes
+RM
+RM
+DIRECTOR / PERSON IN CHARGE
+------------------------------------------------
+IBIZZTAX AI AGENT
+IBIZZAI
+
+
+================================================================================
+
+PAGE 6
+----------------------------------------
+NAME
+: ABCD SDN BHD
+TCOM
+TAX FILE NO.
+: C 11223356780 
+REF NO. :
+BASIS PERIOD
+: 01-01-2024 - 31-12-2024 
+CO. NO. : 202407075678
+YEAR OF ASSESSMENT : 2024
+B/CODE : 10509 
+TAX COMPUTATION
+Page 6
+Sch,wks,Notes
+RM
+RM
+Exempt Account
+Exempt credit balance b/f
+0
+Add:
+Incentive claim
+0
+Exempt income
+0
+0
+Less:
+Current year non pioneer loss
+0
+Exempt dividend paid / credited / distributed
+0
+Exempt credit balance c/f
+0
+IBIZZTAX AI AGENT
+IBIZZAI
+
+
+================================================================================
+

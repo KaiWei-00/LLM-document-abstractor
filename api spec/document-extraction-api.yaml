@@ -1,0 +1,70 @@
+openapi: 3.0.3
+info:
+  title: Document Extraction API
+  version: 1.0.0
+  description: |
+    API for extracting structured financial data from documents (PDF, Excel, Word) and returning both raw and calculated results.
+    
+    - Returns raw extraction and post-processed (calculated/final) values.
+    - Supports file upload and status endpoints.
+    - See README.md for usage and field calculation details.
+servers:
+  - url: http://localhost:8000
+paths:
+  /extract:
+    post:
+      summary: Extract structured data from a document
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Document file (PDF, Excel, Word)
+      responses:
+        '200':
+          description: Extraction result with both raw and final calculated data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtractionResponse'
+        '400':
+          description: Invalid request or file
+        '500':
+          description: Internal server error
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: API is healthy
+components:
+  schemas:
+    ExtractionResponse:
+      type: object
+      properties:
+        file_info:
+          type: object
+          properties:
+            filename:
+              type: string
+            file_type:
+              type: string
+            size:
+              type: integer
+            processing_time:
+              type: number
+        extracted_data:
+          type: object
+          description: Final (calculated) extraction results
+        raw_extracted_data:
+          type: object
+          description: Raw extraction results before post-processing (if available)
+        processing_metadata:
+          type: object
+        schema_detection:
+          type: object
